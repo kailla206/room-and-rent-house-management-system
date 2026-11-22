@@ -1,5 +1,17 @@
 #include "tubes2.h"
 
+/* ===================== FORMAT ===================== */
+// BARU: ubah angka jadi format ribuan, contoh 2000000 -> "2.000.000"
+string formatRupiah(long long n) {
+    string s = to_string(n);
+    int i = (int)s.length() - 3;
+    while (i > 0) {
+        s.insert(i, ".");
+        i -= 3;
+    }
+    return s;
+}
+
 /* ===================== PRIMITIVES ===================== */
 void createListParent(ListParent &L) {
     L.first = NULL;
@@ -106,7 +118,7 @@ void printParent(ListParent L) {
         cout << no++ << ". ID: " << P->info.roomID
              << " | Tenant: " << P->info.tenantName
              << " | Type: " << P->info.roomType
-             << " | Rent: Rp" << P->info.monthlyRent << "/month" << endl;
+             << " | Rent: Rp" << formatRupiah(P->info.monthlyRent) << "/month" << endl;   // UBAH
         P = P->next;
     }
 }
@@ -142,7 +154,8 @@ bool insertChild(ListParent L, string roomID, adrChild C) {
         }
         Q->next = C;
     }
-    cout << "[+] Pembayaran periode " << C->info.period
+        cout << "[+] Pembayaran periode " << C->info.period
+         << " (" << C->info.status << ")"
          << " berhasil dicatat pada room " << roomID << "." << endl;
     return true;
 }
@@ -200,7 +213,7 @@ void printChild(adrParent P) {
     int no = 1;
     while (C != NULL) {
         cout << "    " << no++ << ". Period: " << C->info.period
-             << " | Paid: Rp" << C->info.amountPaid
+             << " | Paid: Rp" << formatRupiah(C->info.amountPaid)   // UBAH
              << " | Method: " << C->info.method
              << " | Status: " << C->info.status << endl;
         C = C->next;
@@ -219,7 +232,7 @@ void printAll(ListParent L) {
         cout << "Room " << P->info.roomID
              << " | " << P->info.tenantName
              << " | " << P->info.roomType
-             << " | Rp" << P->info.monthlyRent << "/month" << endl;
+             << " | Rp" << formatRupiah(P->info.monthlyRent) << "/month" << endl;   // UBAH
         printChild(P);
         cout << "--------------------------------------" << endl;
         P = P->next;
@@ -238,8 +251,8 @@ int countChild(adrParent P) {
     return n;
 }
 
-int totalPaid(adrParent P) {
-    int total = 0;
+long long totalPaid(adrParent P) {   // UBAH: int -> long long
+    long long total = 0;             // UBAH: int -> long long
     if (P == NULL) return 0;
     adrChild C = P->firstChild;
     while (C != NULL) {
@@ -274,8 +287,8 @@ void printRoomsWithArrears(ListParent L) {
     if (!found) cout << "Tidak ada room dengan tunggakan." << endl;
 }
 
-int monthlyIncome(ListParent L, string period) {
-    int total = 0;
+long long monthlyIncome(ListParent L, string period) {   // UBAH: int -> long long
+    long long total = 0;                                 // UBAH: int -> long long
     adrParent P = L.first;
     while (P != NULL) {
         adrChild C = findChild(P, period);

@@ -1,12 +1,25 @@
 #include "tubes2.h"
 
+/* ===================== HELPER INPUT ===================== */
+// BARU: baca nominal uang, boleh pakai titik (2.000.000) atau tanpa titik
+long long bacaUang() {
+    string input;
+    cin >> input;
+    string bersih = "";
+    for (char c : input) {
+        if (c >= '0' && c <= '9') bersih += c;
+    }
+    if (bersih.empty()) return 0;
+    return stoll(bersih);
+}
+
 /* ===================== SAMPLE DATA & AUTO TEST ===================== */
-void addRoom(ListParent &L, string id, string name, string type, int rent) {
+void addRoom(ListParent &L, string id, string name, string type, long long rent) {   // UBAH: int -> long long
     Room r = {id, name, type, rent};
     insertParent(L, createParent(r));
 }
 
-void addPayment(ListParent &L, string id, string period, int amt, string method, string status) {
+void addPayment(ListParent &L, string id, string period, long long amt, string method, string status) {   // UBAH: int -> long long
     Payment p = {period, amt, method, status};
     insertChild(L, id, createChild(p));
 }
@@ -65,7 +78,7 @@ void runAutoTest() {
 
     cout << "\n##### EXTRA #####" << endl;
     printRoomsWithArrears(L);
-    cout << "Pendapatan 01-2027: Rp" << monthlyIncome(L, "01-2027") << endl;
+    cout << "Pendapatan 01-2027: Rp" << formatRupiah(monthlyIncome(L, "01-2027")) << endl;   // UBAH
     adrParent top = roomWithMostPayments(L);
     if (top != NULL) cout << "Pembayaran terbanyak: " << top->info.roomID << " (" << countChild(top) << ")" << endl;
 }
@@ -120,7 +133,7 @@ int main() {
                 cout << "Tipe (1=AC, 2=Non-AC): "; cin >> pilih;
             } while (pilih != 1 && pilih != 2);
             r.roomType = (pilih == 1) ? "AC" : "Non-AC";
-            cout << "Harga sewa/bulan  : "; cin >> r.monthlyRent;
+            cout << "Harga sewa/bulan  : "; r.monthlyRent = bacaUang();   // UBAH
             insertParent(L, createParent(r));
 
         } else if (choice == 2) {
@@ -143,7 +156,7 @@ int main() {
                     cout << "[!] Room tidak ditemukan." << endl;
                 } else {
                     cout << "Ditemukan: " << P->info.roomID << " | " << P->info.tenantName
-                         << " | " << P->info.roomType << " | Rp" << P->info.monthlyRent << endl;
+                         << " | " << P->info.roomType << " | Rp" << formatRupiah(P->info.monthlyRent) << endl;   // UBAH
                 }
             }
 
@@ -157,11 +170,15 @@ int main() {
                 cout << "[!] Room tidak ditemukan." << endl;
             } else {
                 cout << "Periode (MM-YYYY): "; cin >> p.period;
-                cout << "Nominal bayar    : "; cin >> p.amountPaid;
-                do {
-                    cout << "Metode (1=Cash, 2=Transfer): "; cin >> pilih;
-                } while (pilih != 1 && pilih != 2);
-                p.method = (pilih == 1) ? "Cash" : "Transfer";
+                cout << "Nominal bayar    : "; p.amountPaid = bacaUang();
+                if (p.amountPaid == 0) {
+                    p.method = "-";   // tidak bayar, jadi tidak ada metodeg++ -std=c++17 main.cpp tubes2.cpp -o program
+                } else {
+                    do {
+                        cout << "Metode (1=Cash, 2=Transfer): "; cin >> pilih;
+                    } while (pilih != 1 && pilih != 2);
+                    p.method = (pilih == 1) ? "Cash" : "Transfer";
+                }
                 do {
                     cout << "Status (1=Paid, 2=Late, 3=Unpaid): "; cin >> pilih;
                 } while (pilih < 1 || pilih > 3);
@@ -192,7 +209,7 @@ int main() {
                 if (C == NULL) {
                     cout << "[!] Pembayaran tidak ditemukan." << endl;
                 } else {
-                    cout << "Ditemukan: " << C->info.period << " | Rp" << C->info.amountPaid
+                    cout << "Ditemukan: " << C->info.period << " | Rp" << formatRupiah(C->info.amountPaid)   // UBAH
                          << " | " << C->info.method << " | " << C->info.status << endl;
                 }
             }
@@ -211,8 +228,10 @@ int main() {
             if (P == NULL) {
                 cout << "[!] Room tidak ditemukan." << endl;
             } else {
-                cout << "Total pembayaran room " << P->info.roomID << ": Rp" << totalPaid(P)
-                     << " (" << countChild(P) << " transaksi)" << endl;
+                cout << "Total pembayaran room " << P->info.roomID << ": Rp" << formatRupiah(totalPaid(P))
+                    << " (" << countChild(P) << " transaksi)" << endl;
+                cout << "Rincian transaksi:" << endl;
+                printChild(P);
             }
 
         } else if (choice == 11) {
@@ -220,7 +239,7 @@ int main() {
 
         } else if (choice == 12) {
             cout << "Periode (MM-YYYY): "; cin >> period;
-            cout << "Total pendapatan periode " << period << ": Rp" << monthlyIncome(L, period) << endl;
+            cout << "Total pendapatan periode " << period << ": Rp" << formatRupiah(monthlyIncome(L, period)) << endl;   // UBAH
 
         } else if (choice == 13) {
             P = roomWithMostPayments(L);

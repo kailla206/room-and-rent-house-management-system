@@ -11,13 +11,13 @@ struct Room {
     string roomID; 
     string tenantName;
     string roomType;   // "AC" / "Non-AC"
-    int monthlyRent;
+    long long monthlyRent;   // UBAH: int -> long long
 };
 
 // Info Child: Rent Payment
 struct Payment {
     string period;     // format "MM-YYYY", contoh "01-2027"
-    int amountPaid;
+    long long amountPaid;    // UBAH: int -> long long
     string method;     // "Cash" / "Transfer"
     string status;     // "Paid" / "Late" / "Unpaid"
 };
@@ -67,9 +67,12 @@ void printAll(ListParent L);
 
 /* ===================== EXTRA FEATURES ===================== */
 int countChild(adrParent P);
-int totalPaid(adrParent P);
+long long totalPaid(adrParent P);                        // UBAH: int -> long long
 void printRoomsWithArrears(ListParent L);          // kamar dengan status "Late"
-int monthlyIncome(ListParent L, string period);    // rekap pendapatan per periode
+long long monthlyIncome(ListParent L, string period);    // UBAH: int -> long long
 adrParent roomWithMostPayments(ListParent L);
+
+/* ===================== FORMAT ===================== */
+string formatRupiah(long long n);                        // BARU
 
 #endif // MLL_H_INCLUDED
