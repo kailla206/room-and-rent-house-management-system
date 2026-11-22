@@ -7,7 +7,7 @@ void createListParent(ListParent &L) {
 
 bool isEmptyParent(ListParent L) {
     return L.first == NULL;
-}
+} 
 
 bool isEmptyChild(adrParent P) {
     return P->firstChild == NULL;
