@@ -8,7 +8,7 @@ using namespace std;
 /* ===================== INFO TYPE ===================== */
 // Info Parent: Room
 struct Room {
-    string roomID;
+    string roomID; 
     string tenantName;
     string roomType;   // "AC" / "Non-AC"
     int monthlyRent;
