@@ -1,5 +1,17 @@
 #include "tubes2.h"
 
+/* ===================== FORMAT ===================== */
+// BARU: ubah angka jadi format ribuan, contoh 2000000 -> "2.000.000"
+string formatRupiah(int n) {
+    string s = to_string(n);
+    int i = (int)s.length() - 3;
+    while (i > 0) {
+        s.insert(i, ".");
+        i -= 3;
+    }
+    return s;
+}
+
 /* ===================== PRIMITIVES ===================== */
 void createListParent(ListParent &L) {
     L.first = NULL;
@@ -106,7 +118,7 @@ void printParent(ListParent L) {
         cout << no++ << ". ID: " << P->info.roomID
              << " | Tenant: " << P->info.tenantName
              << " | Type: " << P->info.roomType
-             << " | Rent: Rp" << P->info.monthlyRent << "/month" << endl;
+             << " | Rent: Rp" << formatRupiah(P->info.monthlyRent) << "/month" << endl;   // UBAH
         P = P->next;
     }
 }
@@ -143,6 +155,7 @@ bool insertChild(ListParent L, string roomID, adrChild C) {
         Q->next = C;
     }
     cout << "[+] Pembayaran periode " << C->info.period
+         << " (" << C->info.status << ")"                                   // UBAH: tampilkan status
          << " berhasil dicatat pada room " << roomID << "." << endl;
     return true;
 }
@@ -200,7 +213,7 @@ void printChild(adrParent P) {
     int no = 1;
     while (C != NULL) {
         cout << "    " << no++ << ". Period: " << C->info.period
-             << " | Paid: Rp" << C->info.amountPaid
+             << " | Paid: Rp" << formatRupiah(C->info.amountPaid)   // UBAH
              << " | Method: " << C->info.method
              << " | Status: " << C->info.status << endl;
         C = C->next;
@@ -219,7 +232,7 @@ void printAll(ListParent L) {
         cout << "Room " << P->info.roomID
              << " | " << P->info.tenantName
              << " | " << P->info.roomType
-             << " | Rp" << P->info.monthlyRent << "/month" << endl;
+             << " | Rp" << formatRupiah(P->info.monthlyRent) << "/month" << endl;   // UBAH
         printChild(P);
         cout << "--------------------------------------" << endl;
         P = P->next;
