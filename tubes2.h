@@ -8,16 +8,16 @@ using namespace std;
 /* ===================== INFO TYPE ===================== */
 // Info Parent: Room
 struct Room {
-    string roomID; 
+    string roomID;
     string tenantName;
     string roomType;   // "AC" / "Non-AC"
-    long long monthlyRent;   // UBAH: int -> long long
+    int monthlyRent;
 };
 
 // Info Child: Rent Payment
 struct Payment {
     string period;     // format "MM-YYYY", contoh "01-2027"
-    long long amountPaid;    // UBAH: int -> long long
+    int amountPaid;
     string method;     // "Cash" / "Transfer"
     string status;     // "Paid" / "Late" / "Unpaid"
 };
@@ -67,12 +67,9 @@ void printAll(ListParent L);
 
 /* ===================== EXTRA FEATURES ===================== */
 int countChild(adrParent P);
-long long totalPaid(adrParent P);                        // UBAH: int -> long long
+int totalPaid(adrParent P);
 void printRoomsWithArrears(ListParent L);          // kamar dengan status "Late"
-long long monthlyIncome(ListParent L, string period);    // UBAH: int -> long long
+int monthlyIncome(ListParent L, string period);    // rekap pendapatan per periode
 adrParent roomWithMostPayments(ListParent L);
-
-/* ===================== FORMAT ===================== */
-string formatRupiah(long long n);                        // BARU
 
 #endif // MLL_H_INCLUDED
